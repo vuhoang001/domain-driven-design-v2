@@ -28,8 +28,6 @@ public static class DomainEventNotificationFactory
 
             if (notificationInterface != null)
             {
-                // ✅ Register trực tiếp - notification handlers có parameterless constructor
-                // Event sẽ được truyền qua Handle() method từ DomainEventDispatcher
                 services.AddTransient(notificationInterface, notificationType);
             }
         }
@@ -37,4 +35,3 @@ public static class DomainEventNotificationFactory
         return services;
     }
 }
-

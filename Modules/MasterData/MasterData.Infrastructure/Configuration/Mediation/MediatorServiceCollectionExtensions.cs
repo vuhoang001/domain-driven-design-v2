@@ -34,9 +34,9 @@ public static class MediatorServiceCollectionExtensions
                           .AsImplementedInterfaces()
                           .WithScopedLifetime());
 
-        // ✅ Register IDomainEventNotification handlers với custom factory
-        // Tương tự Autofac: .AsClosedTypesOf(typeof(IDomainEventNotification<>))
-        services.AddDomainEventNotifications(assemblies);
+        // ✅ REMOVED: Manual registration of IDomainEventNotification handlers
+        // MediatR's AddMediatR() already auto-discovers all notification handlers
+        // This avoids DI validation errors during startup
 
         return services;
     }

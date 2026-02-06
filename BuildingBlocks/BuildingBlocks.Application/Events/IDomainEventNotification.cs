@@ -1,4 +1,3 @@
-using BuildingBlocks.Application.Email;
 using MediatR;
 
 namespace BuildingBlocks.Application.Events;
