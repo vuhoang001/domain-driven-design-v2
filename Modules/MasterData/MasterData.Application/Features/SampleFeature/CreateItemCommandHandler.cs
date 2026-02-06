@@ -1,14 +1,27 @@
 using MasterData.Application.Configuration.Commands;
+using MasterData.Domain.Inventory;
 using MasterData.Domain.Item;
 
 namespace MasterData.Application.Features.SampleFeature;
 
-public class CreateItemCommandHandler(IItemRepository itemRepository) : ICommandHandler<CreateItemCommand, string>
+public class CreateItemCommandHandler(
+    IItemRepository itemRepository,
+    IInventoryRepository inventoryRepository
+)
+    : ICommandHandler<CreateItemCommand, string>
 {
     public async Task<string> Handle(CreateItemCommand command, CancellationToken cancellationToken)
     {
-        await itemRepository.AddAsync(
-            Item.Create(Guid.NewGuid(), command.Name, "Sample Description", 0));
-        return $"Sample created with name: {command.Name}";
+        // ✅ 1. Tạo Item
+        var item = Item.Create(Guid.NewGuid(), command.Name, "Sample Description", 0);
+        await itemRepository.AddAsync(item);
+
+        var inventory =
+            Domain.Inventory.Inventory.Create(Guid.NewGuid(), $"Inventory for {command.Name}",
+                                              "Auto-created", 0);
+
+        await inventoryRepository.AddAsync(inventory);
+
+        return $"Item '{command.Name}' + Inventory created in same transaction";
     }
 }

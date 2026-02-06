@@ -24,26 +24,31 @@ public class DomainEventDispatcher(
 
         foreach (var domainEvent in domainEvents)
         {
-            var domainEventNotificationType       = typeof(IDomainEventNotification<>);
-            var domainNotificationWithGenericType = domainEventNotificationType.MakeGenericType(domainEvent.GetType());
+            var concreteNotificationType = FindConcreteNotificationType(domainEvent.GetType());
 
-            try
+            if (concreteNotificationType != null)
             {
-                var domainNotification =
-                    ActivatorUtilities.CreateInstance(serviceProvider,
-                                                      domainNotificationWithGenericType,
-                                                      domainEvent,
-                                                      domainEvent.Id);
-
-                if (domainNotification is not null)
+                try
                 {
-                    domainEventNotifications.Add(domainNotification as IDomainEventNotification<IDomainEvent> ??
-                                                 throw new InvalidOperationException());
+                    var domainNotification = Activator.CreateInstance(
+                        concreteNotificationType,
+                        domainEvent,
+                        domainEvent.Id
+                    );
+
+                    if (domainNotification != null)
+                    {
+                        domainEventNotifications.Add(
+                            (IDomainEventNotification<IDomainEvent>)domainNotification
+                        );
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                // ignored
+                catch (Exception e)
+                {
+                    // Log error
+                    throw new InvalidOperationException(
+                        $"Failed to create notification for {domainEvent.GetType().Name}", e);
+                }
             }
         }
 
@@ -70,5 +75,34 @@ public class DomainEventDispatcher(
 
             outbox.Add(outboxMessage);
         }
+    }
+
+    private Type? FindConcreteNotificationType(Type domainEventType)
+    {
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+        foreach (var assembly in assemblies)
+        {
+            try
+            {
+                var notificationType = assembly.GetTypes()
+                    .FirstOrDefault(t =>
+                                        !t.IsAbstract                                                              &&
+                                        !t.IsInterface                                                             &&
+                                        t.BaseType?.IsGenericType             == true                              &&
+                                        t.BaseType.GetGenericTypeDefinition() == typeof(DomainEventNotification<>) &&
+                                        t.BaseType.GetGenericArguments()[0]   == domainEventType
+                    );
+
+                if (notificationType != null)
+                    return notificationType;
+            }
+            catch
+            {
+                continue;
+            }
+        }
+
+        return null;
     }
 }

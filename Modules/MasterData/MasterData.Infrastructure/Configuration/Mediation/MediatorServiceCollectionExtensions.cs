@@ -6,7 +6,7 @@ namespace MasterData.Infrastructure.Configuration.Mediation;
 
 public static class MediatorServiceCollectionExtensions
 {
-    public static IServiceCollection AddMediator(this IServiceCollection services)
+    public static void AddMediator(this IServiceCollection services)
     {
         var applicationAssembly    = Assemblies.Application;
         var infrastructureAssembly = Assemblies.Infrastructure;
@@ -33,11 +33,5 @@ public static class MediatorServiceCollectionExtensions
                           .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)))
                           .AsImplementedInterfaces()
                           .WithScopedLifetime());
-
-        // ✅ REMOVED: Manual registration of IDomainEventNotification handlers
-        // MediatR's AddMediatR() already auto-discovers all notification handlers
-        // This avoids DI validation errors during startup
-
-        return services;
     }
 }

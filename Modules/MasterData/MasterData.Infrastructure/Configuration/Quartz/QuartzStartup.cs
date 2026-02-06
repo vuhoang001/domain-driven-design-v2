@@ -42,8 +42,7 @@ public static class QuartzServiceCollectionExtensions
         var outboxJobKey = new JobKey("ProcessOutboxJob", "MasterData");
         var outboxJob = JobBuilder.Create<ProcessOutboxJob>()
             .WithIdentity(outboxJobKey)
-            .Build();
-
+            .Build(); 
         var outboxTrigger = CreateTrigger("ProcessOutboxTrigger", intervalMs);
 
         scheduler.ScheduleJob(outboxJob, outboxTrigger).GetAwaiter().GetResult();
@@ -70,7 +69,8 @@ public static class QuartzServiceCollectionExtensions
                 .Create()
                 .WithIdentity(triggerName, "MasterData")
                 .StartNow()
-                .WithCronSchedule("0/2 * * ? * *")
+                // .WithCronSchedule("0/2 * * ? * *")
+                .WithCronSchedule("0/5 * * ? * *")
                 .Build();
         }
 

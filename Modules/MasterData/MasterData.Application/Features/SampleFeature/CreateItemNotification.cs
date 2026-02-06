@@ -1,16 +1,10 @@
-using BuildingBlocks.Application.Events;
-using MasterData.Domain.Item.Events;
+    using BuildingBlocks.Application.Events;
+    using MasterData.Domain.Item.Events;
 
-namespace MasterData.Application.Features.SampleFeature;
+    namespace MasterData.Application.Features.SampleFeature;
 
-public class CreateItemNotification : IDomainEventNotification<CreateItemDomainEvent>
-{
-    public Guid Id { get; } = Guid.NewGuid();
-    public CreateItemDomainEvent DomainEvent { get; set; } = null!;
-
-    public async Task Handle(CreateItemDomainEvent domainEvent, CancellationToken cancellationToken)
+    public class CreateItemNotification(CreateItemDomainEvent domainEvent, Guid id)
+        : DomainEventNotification<CreateItemDomainEvent>(domainEvent, id)
     {
-        DomainEvent = domainEvent;
-        await Task.CompletedTask;
     }
-}
+

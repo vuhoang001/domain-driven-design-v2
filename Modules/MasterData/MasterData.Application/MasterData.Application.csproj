@@ -12,4 +12,8 @@
     <ProjectReference Include="..\MasterData.Domain\MasterData.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Items\EventHandlers\" />
+  </ItemGroup>
+
 </Project>

@@ -17,12 +17,12 @@ public class ProcessOutboxCommandHandle(
     {
         var connection = sqlConnectionFactory.GetOpenConnection();
         const string sql = $"""
-                            SELECT 
-                                [OutboxMessage].[Id] AS [{nameof(OutboxMessageDto.Id)}], 
-                                [OutboxMessage].[Type] AS [{nameof(OutboxMessageDto.Type)}], 
-                                [OutboxMessage].[Data] AS [{nameof(OutboxMessageDto.Data)}] 
-                            FROM [dbo].[OutboxMessages] AS [OutboxMessage] 
-                            WHERE [OutboxMessage].[ProcessedDate] IS NULL 
+                            SELECT
+                                [OutboxMessage].[Id] AS [{nameof(OutboxMessageDto.Id)}],
+                                [OutboxMessage].[Type] AS [{nameof(OutboxMessageDto.Type)}],
+                                [OutboxMessage].[Data] AS [{nameof(OutboxMessageDto.Data)}]
+                            FROM [dbo].[OutboxMessages] AS [OutboxMessage]
+                            WHERE [OutboxMessage].[ProcessedDate] IS NULL
                             ORDER BY [OutboxMessage].[OccurredOn]
                             """;
 
@@ -31,8 +31,8 @@ public class ProcessOutboxCommandHandle(
         var messagesList = messages.ToList();
 
         const string sqlUpdateProcessedDate = """
-                                              UPDATE [dbo].[OutboxMessages] 
-                                              SET [ProcessedDate] = @Date 
+                                              UPDATE [dbo].[OutboxMessages]
+                                              SET [ProcessedDate] = @Date
                                               WHERE [Id] = @Id
                                               """;
 
@@ -46,7 +46,7 @@ public class ProcessOutboxCommandHandle(
                 await mediator.Publish(@event, cancellationToken);
                 await connection.ExecuteAsync(sqlUpdateProcessedDate, new
                 {
-                    Date = DateTime.UtcNow, 
+                    Date = DateTime.UtcNow,
                     message.Id
                 });
             }

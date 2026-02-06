@@ -8,9 +8,14 @@ namespace MasterData.Infrastructure.Outbox;
 
 public static class OutboxServiceCollectionExtensions
 {
-    public static IServiceCollection AddOutbox(this IServiceCollection services,
-        BiDictionary<string, Type> domainNotificationsMap)
+    public static void AddOutbox(this IServiceCollection services,
+        BiDictionary<string, Type>? domainNotificationsMap = null)
     {
+        if (domainNotificationsMap == null)
+        {
+            domainNotificationsMap = BuildDomainNotificationsMap();
+        }
+
         services.AddScoped<IOutbox, OutboxAccessor>();
 
         services.AddSingleton<IDomainEventNotificationMapper>(sp =>
@@ -18,15 +23,39 @@ public static class OutboxServiceCollectionExtensions
                                                                       domainNotificationsMap));
 
         CheckMappings(domainNotificationsMap);
+    }
 
-        return services;
+    /// <summary>
+    /// Auto-discover and build mapping for IDomainEventNotification handlers
+    /// </summary>
+    private static BiDictionary<string, Type> BuildDomainNotificationsMap()
+    {
+        var map = new BiDictionary<string, Type>();
+
+        var domainEventNotifications = Assemblies.Application
+            .GetTypes()
+            .Where(x => x.GetInterfaces().Any(i =>
+                                                  i.IsGenericType &&
+                                                  i.GetGenericTypeDefinition() == typeof(IDomainEventNotification<>)))
+            .ToList();
+
+        foreach (var notificationType in domainEventNotifications)
+        {
+            // Use fully qualified name as key
+            var key = notificationType.FullName ?? notificationType.Name;
+            map.Add(key, notificationType);
+        }
+
+        return map;
     }
 
     private static void CheckMappings(BiDictionary<string, Type> domainNotificationsMap)
     {
         var domainEventNotifications = Assemblies.Application
             .GetTypes()
-            .Where(x => x.GetInterfaces().Contains(typeof(IDomainEventNotification)))
+            .Where(x => x.GetInterfaces().Any(i =>
+                                                  i.IsGenericType &&
+                                                  i.GetGenericTypeDefinition() == typeof(IDomainEventNotification<>)))
             .ToList();
 
         List<Type> notMappedNotifications = [];

@@ -19,6 +19,15 @@
       <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="publish\web.config" />
+      <_ContentIncludedByDefault Remove="publish\appsettings.Development.json" />
+      <_ContentIncludedByDefault Remove="publish\appsettings.json" />
+      <_ContentIncludedByDefault Remove="publish\ddd.API.deps.json" />
+      <_ContentIncludedByDefault Remove="publish\ddd.API.runtimeconfig.json" />
+      <_ContentIncludedByDefault Remove="publish\ddd.API.staticwebassets.endpoints.json" />
+    </ItemGroup>
+
 </Project>
 
 
