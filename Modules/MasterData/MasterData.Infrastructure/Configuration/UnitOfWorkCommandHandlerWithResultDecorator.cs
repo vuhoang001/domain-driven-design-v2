@@ -14,8 +14,6 @@ internal class UnitOfWorkCommandHandlerWithResultDecorator<T, TResult>(
     {
         var result = await decorated.Handle(request, cancellationToken);
 
-        Console.WriteLine("unitofworkcommandhanlderwithresultdecorator");
-
         await unitOfWork.CommitAsync(cancellationToken);
         return result;
     }

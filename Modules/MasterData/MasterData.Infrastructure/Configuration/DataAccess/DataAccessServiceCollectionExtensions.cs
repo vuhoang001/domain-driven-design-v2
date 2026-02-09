@@ -1,7 +1,6 @@
 using BuildingBlocks.Application.Data;
 using BuildingBlocks.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MasterData.Infrastructure.Configuration.DataAccess;

@@ -14,9 +14,8 @@ public static class MasterDataCompositionRoot
     public static IServiceScope BeginLifetimeScope()
     {
         if (_serviceProvider == null)
-            throw new InvalidOperationException("ServiceProvider has not been initialized. Call SetServiceProvider first.");
+            throw new InvalidOperationException(
+                "ServiceProvider has not been initialized. Call SetServiceProvider first.");
         return _serviceProvider.CreateScope();
     }
 }
-
-

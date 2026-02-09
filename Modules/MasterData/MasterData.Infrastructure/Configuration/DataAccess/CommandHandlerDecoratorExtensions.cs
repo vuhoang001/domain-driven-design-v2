@@ -7,13 +7,15 @@ namespace MasterData.Infrastructure.Configuration.DataAccess;
 
 public static class CommandHandlerDecoratorsExtensions
 {
-    public static IServiceCollection AddCommandHandlerDecorators(this IServiceCollection services)
+    public static void AddCommandHandlerDecorators(this IServiceCollection services)
     {
         var assembly = typeof(CommandHandlerDecoratorsExtensions).Assembly;
 
         var appAssembly = typeof(ICommandHandler<>).Assembly;
 
-        services.AddSingleton(typeof(IValidatorResolver<>), typeof(ValidatorResolver<>));
+        services.AddValidatorsFromAssembly(appAssembly);
+
+        services.AddTransient(typeof(IValidatorResolver<>), typeof(ValidatorResolver<>));
 
         DecorateIfExists(services, assembly, typeof(ICommandHandler<>),
                          "UnitOfWorkCommandHandlerDecorator", 1);
@@ -24,8 +26,6 @@ public static class CommandHandlerDecoratorsExtensions
                          "ValidationCommandHandlerDecorator", 1);
         DecorateIfExists(services, assembly, typeof(ICommandHandler<,>),
                          "ValidationCommandHandlerWithResultDecorator", 2);
-
-        return services;
     }
 
     private static void DecorateIfExists(

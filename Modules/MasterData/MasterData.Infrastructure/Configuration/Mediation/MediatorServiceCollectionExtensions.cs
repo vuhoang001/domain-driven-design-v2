@@ -13,7 +13,6 @@ public static class MediatorServiceCollectionExtensions
 
         services.AddMediatR(cfg => { cfg.RegisterServicesFromAssembly(applicationAssembly); });
 
-        // Scan cả Application và Infrastructure
         var assemblies = new[] { applicationAssembly, infrastructureAssembly };
 
         services.Scan(scan => scan

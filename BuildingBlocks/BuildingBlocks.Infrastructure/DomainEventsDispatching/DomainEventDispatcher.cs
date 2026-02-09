@@ -3,14 +3,12 @@ using BuildingBlocks.Application.Outbox;
 using BuildingBlocks.Domain;
 using BuildingBlocks.Infrastructure.Serialization;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace BuildingBlocks.Infrastructure.DomainEventsDispatching;
 
 public class DomainEventDispatcher(
     IMediator mediator,
-    IServiceProvider serviceProvider,
     IOutbox outbox,
     IDomainEventAccessor domainEventAccessor,
     IDomainEventNotificationMapper domainEventNotificationMapper
@@ -73,6 +71,7 @@ public class DomainEventDispatcher(
                 type,
                 data);
 
+
             outbox.Add(outboxMessage);
         }
     }
@@ -99,7 +98,7 @@ public class DomainEventDispatcher(
             }
             catch
             {
-                continue;
+                // ignored
             }
         }
 

@@ -1,19 +1,15 @@
-using MasterData.Domain.Inventory;
+using MasterData.Domain.Item;
 using MediatR;
 
 namespace MasterData.Application.Features.SampleFeature;
 
-public class CreateItemNotificationHandler(IInventoryRepository inventoryRepository)
+public class CreateItemNotificationHandler(IItemRepository itemRepository)
     : INotificationHandler<CreateItemNotification>
 {
     public async Task Handle(CreateItemNotification notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
-
-        var inventory =
-            Domain.Inventory.Inventory.Create(domainEvent.ItemId, $"Inventory for {domainEvent.ItemName}",
-                                              "Auto-created", 0);
-
-        await inventoryRepository.AddAsync(inventory);
+        var item        = await itemRepository.GetByIdAsync(domainEvent.ItemId);
+        item?.Update("Updated by CreateItemNotificationHandler", domainEvent.ItemDesc, domainEvent.Price);
     }
 }

@@ -13,11 +13,11 @@ public static class QuartzServiceCollectionExtensions
     {
         Console.WriteLine("\n=== Configuring Quartz Scheduler ===");
 
-        var scheduler = CreateAndStartScheduler();
+        // var scheduler = CreateAndStartScheduler();
 
-        ScheduleOutboxJob(scheduler, internalProcessingPoolingInterval);
+        // ScheduleOutboxJob(scheduler, internalProcessingPoolingInterval);
 
-        services.AddSingleton(scheduler);
+        // services.AddSingleton(scheduler);
 
         return services;
     }
