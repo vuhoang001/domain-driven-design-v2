@@ -2,5 +2,5 @@ namespace BuildingBlocks.Application.Email;
 
 public interface IEmailSender
 {
-   Task SendMessage(EmailMessage emailMessage);
+   Task SendMessage(EmailMsg emailMsg);
 }

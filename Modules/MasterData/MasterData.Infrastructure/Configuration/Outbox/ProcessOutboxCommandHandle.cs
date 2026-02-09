@@ -43,7 +43,7 @@ public class ProcessOutboxCommandHandle(
                 var type   = domainNotificationMapper.GetType(message.Type);
                 var @event = JsonConvert.DeserializeObject(message.Data, type) as IDomainEventNotification;
 
-                await mediator.Publish(@event, cancellationToken);
+                await mediator.Publish(@event, cancellationToken).ConfigureAwait(false);
                 await connection.ExecuteAsync(sqlUpdateProcessedDate, new
                 {
                     Date = DateTime.UtcNow,

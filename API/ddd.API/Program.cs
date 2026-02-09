@@ -13,13 +13,16 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerDocumentation();
 builder.Services.AddProblemDetails(x =>
 {
-    x.IncludeExceptionDetails = (ctx, ex) => false;
+    // x.IncludeExceptionDetails = (ctx, ex) => false;
     x.Map<InvalidCommandException>(ex => new InvalidCommandProblemDetails(ex));
     x.Map<BusinessRuleValidationException>(ex => new BusinessRuleValidationExceptionProblemDetails(ex));
 });
 
 
-var emailConfig      = new EmailConfiguration("noreply@example.com");
+var emailConfig = builder.Configuration
+    .GetSection("EmailConfiguration")
+    .Get<EmailConfiguration>() ?? new EmailConfiguration();
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=:memory:";
 
 builder.Services.AddMasterDataServices(connectionString, emailConfig);

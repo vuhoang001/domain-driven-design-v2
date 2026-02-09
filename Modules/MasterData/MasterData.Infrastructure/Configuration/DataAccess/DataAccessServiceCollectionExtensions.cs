@@ -7,12 +7,12 @@ namespace MasterData.Infrastructure.Configuration.DataAccess;
 
 public static class DataAccessServiceCollectionExtensions
 {
-    public static IServiceCollection AddDataAccessModule(this IServiceCollection services,
+    public static void AddDataAccessModule(this IServiceCollection services,
         string connectionString)
     {
-        services.AddScoped<ISqlConnectionFactory>(sp => new SqlConnectionFactory(connectionString));
+        services.AddScoped<ISqlConnectionFactory>(_ => new SqlConnectionFactory(connectionString));
 
-        services.AddDbContext<MasterDataContext>((sp, options) => { options.UseSqlServer(connectionString); });
+        services.AddDbContext<MasterDataContext>((_, options) => { options.UseSqlServer(connectionString); });
 
         services.AddScoped<DbContext>(sp => sp.GetRequiredService<MasterDataContext>());
 
@@ -32,7 +32,5 @@ public static class DataAccessServiceCollectionExtensions
                 services.AddScoped(interfaceType, repositoryType);
             }
         }
-
-        return services;
     }
 }

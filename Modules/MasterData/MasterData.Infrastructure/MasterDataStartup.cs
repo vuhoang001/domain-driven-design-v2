@@ -2,6 +2,7 @@ using BuildingBlocks.Infrastructure.Email;
 using MasterData.Application.Configuration.Commands;
 using MasterData.Infrastructure.Configuration;
 using MasterData.Infrastructure.Configuration.DataAccess;
+using MasterData.Infrastructure.Configuration.Email;
 using MasterData.Infrastructure.Configuration.Mediation;
 using MasterData.Infrastructure.Configuration.Quartz;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,9 @@ public static class MasterDataStartup
 
         // MediatR
         services.AddMediator();
+        
+        // Email 
+        services.AddEmail();
 
         // Processing (Domain Events, UnitOfWork, Commands)
         services.AddProcessing();

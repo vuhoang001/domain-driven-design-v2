@@ -1,5 +1,6 @@
 using BuildingBlocks.Domain;
 using MasterData.Domain.Item.Events;
+using MasterData.Domain.Item.Rules;
 
 namespace MasterData.Domain.Item;
 
@@ -18,6 +19,7 @@ public class Item : Entity, IAggregateRoot
 
     protected Item(Guid id, string itemName, string? itemDesc, decimal price)
     {
+        CheckRule(new PriceMustBeGreaterThanZeroRule(price));
         Id       = id;
         ItemName = itemName;
         ItemDesc = itemDesc;

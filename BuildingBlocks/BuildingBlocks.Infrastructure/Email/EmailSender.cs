@@ -1,43 +1,53 @@
+using System.Net;
+using System.Net.Mail;
+using System.Net.Mime;
 using BuildingBlocks.Application.Data;
 using BuildingBlocks.Application.Email;
 using Dapper;
-using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.Infrastructure.Email;
 
 /// <summary>
 /// Đây chỉ là sample đơn giản để minh họa cách gửi email bằng cách lưu trữ vao cơ sở dữ liệu.
 /// </summary>
-/// <param name="logger"></param>
 /// <param name="configuration"></param>
 /// <param name="sqlConnectionFactory"></param>
 public class EmailSender(
-    ILogger logger,
-    EmailConfiguration configuration,
-    ISqlConnectionFactory sqlConnectionFactory) : IEmailSender
+    EmailConfiguration configuration
+    // ISqlConnectionFactory sqlConnectionFactory
+) : IEmailSender
 {
-    public async Task SendMessage(EmailMessage message)
+    public async Task SendMessage(EmailMsg msg)
     {
-        var sqlConnection = sqlConnectionFactory.GetOpenConnection();
+        try
+        {
+            using var smtpClient  = CreateSmtpClient();
+            using var mailMessage = CreateMailMessage(msg);
+            await smtpClient.SendMailAsync(mailMessage);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
+    }
 
-        await sqlConnection.ExecuteScalarAsync(
-            "INSERT INTO [app].[Emails] ([Id], [From], [To], [Subject], [Content], [Date]) " +
-            "VALUES (@Id, @From, @To, @Subject, @Content, @Date) ",
-            new
-            {
-                Id   = Guid.NewGuid(),
-                From = configuration.FromEmail,
-                message.To,
-                message.Subject,
-                message.Content,
-                Date = DateTime.UtcNow
-            });
+    private MailMessage CreateMailMessage(EmailMsg msg)
+    {
+        return new MailMessage
+        {
+            Body    = msg.Content,
+            From    = new MailAddress(configuration.FromEmail, configuration.Password),
+            Subject = msg.Subject,
+        };
+    }
 
-        logger.LogInformation(
-            "Email sent. From: {From}, To: {To}, Subject: {Subject}, Content: {Content}.",
-            configuration.FromEmail,
-            message.To,
-            message.Subject,
-            message.Content);
+    private SmtpClient CreateSmtpClient()
+    {
+        return new SmtpClient(configuration.SmtpHost, configuration.SmtpPort)
+        {
+            Credentials    = new NetworkCredential(configuration.FromEmail, configuration.Password),
+            DeliveryMethod = SmtpDeliveryMethod.Network,
+            EnableSsl      = true,
+        };
     }
 }
