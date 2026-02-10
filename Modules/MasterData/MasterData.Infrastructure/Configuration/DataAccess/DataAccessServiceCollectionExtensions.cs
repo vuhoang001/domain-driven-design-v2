@@ -1,6 +1,7 @@
 using BuildingBlocks.Application.Data;
 using BuildingBlocks.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MasterData.Infrastructure.Configuration.DataAccess;
@@ -12,7 +13,12 @@ public static class DataAccessServiceCollectionExtensions
     {
         services.AddScoped<ISqlConnectionFactory>(_ => new SqlConnectionFactory(connectionString));
 
-        services.AddDbContext<MasterDataContext>((_, options) => { options.UseSqlServer(connectionString); });
+
+        services.AddDbContext<MasterDataContext>((_, options) =>
+        {
+            options.UseSqlServer(connectionString);
+            options.ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
+        });
 
         services.AddScoped<DbContext>(sp => sp.GetRequiredService<MasterDataContext>());
 
@@ -34,3 +40,4 @@ public static class DataAccessServiceCollectionExtensions
         }
     }
 }
+

@@ -15,10 +15,10 @@ public class ItemRepository(MasterDataContext context) : IItemRepository
         context.Items.Update(item);
     }
 
-     public async Task<MasterData.Domain.Item.Item?> GetByIdAsync(Guid itemId)
+    public async Task<MasterData.Domain.Item.Item?> GetByIdAsync(Guid itemId)
     {
-        var result = await context.Items.FirstOrDefaultAsync(x => x.Id == itemId);
-        
+        var result = await context.Items.FirstOrDefaultAsync(x => x.Id == new ItemId(itemId));
+
         return result;
     }
 }
