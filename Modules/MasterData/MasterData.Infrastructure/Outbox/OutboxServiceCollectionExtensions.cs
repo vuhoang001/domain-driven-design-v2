@@ -17,7 +17,6 @@ public static class OutboxServiceCollectionExtensions
         }
 
         services.AddScoped<IOutbox, OutboxAccessor>();
-
         services.AddSingleton<IDomainEventNotificationMapper>(sp =>
                                                                   new DomainEventNotificationMapper(
                                                                       domainNotificationsMap));

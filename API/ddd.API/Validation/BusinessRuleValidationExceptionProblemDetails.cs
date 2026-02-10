@@ -1,4 +1,3 @@
-using BuildingBlocks.Application;
 using BuildingBlocks.Domain;
 using Microsoft.AspNetCore.Mvc;
 

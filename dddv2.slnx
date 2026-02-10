@@ -15,4 +15,9 @@
     <Project Path="Modules/MasterData/MasterData.Domain/MasterData.Domain.csproj" />
     <Project Path="Modules/MasterData/MasterData.Infrastructure/MasterData.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/Modules/Procurement/">
+    <Project Path="Modules/Procurement/Procurement.Application/Procurement.Application.csproj" />
+    <Project Path="Modules/Procurement/Procurement.Domain/Procurement.Domain.csproj" />
+    <Project Path="Modules/Procurement/Procurement.Infrastructure/Procurement.Infrastructure.csproj" />
+  </Folder>
 </Solution>

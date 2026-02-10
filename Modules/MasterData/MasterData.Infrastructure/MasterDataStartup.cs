@@ -38,7 +38,6 @@ public static class MasterDataStartup
         // Quartz Scheduler (every 2 seconds)
         services.AddQuartzScheduler(internalProcessingPoolingInterval: 2000);
 
-        // MasterData Module itself
         services.AddScoped<IMasterDataModule, MasterDataModule>();
 
         return services;

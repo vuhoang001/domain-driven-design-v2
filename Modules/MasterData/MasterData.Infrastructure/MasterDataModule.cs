@@ -1,5 +1,6 @@
 using MasterData.Application.Configuration.Commands;
 using MasterData.Application.Contracts;
+using MasterData.Infrastructure.Configuration;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,9 +30,7 @@ public class MasterDataModule : IMasterDataModule
     /// <returns>Command result.</returns>
     public async Task<TResult> ExecuteCommandAsync<TResult>(ICommand<TResult> command)
     {
-        using var scope    = _serviceProvider.CreateScope();
-        var       mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-        return await mediator.Send(command);
+        return await CommandsExecutor.Execute(command);
     }
 
     /// <summary>
@@ -41,9 +40,7 @@ public class MasterDataModule : IMasterDataModule
     /// <returns>Task.</returns>
     public async Task ExecuteCommandAsync(ICommand command)
     {
-        using var scope    = _serviceProvider.CreateScope();
-        var       mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-        await mediator.Send(command);
+        await CommandsExecutor.Execute(command);
     }
 
     /// <summary>

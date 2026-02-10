@@ -7,7 +7,7 @@ namespace MasterData.Infrastructure.Configuration.Quartz;
 
 public static class QuartzServiceCollectionExtensions
 {
-    public static IServiceCollection AddQuartzScheduler(
+    public static void AddQuartzScheduler(
         this IServiceCollection services,
         long? internalProcessingPoolingInterval = null)
     {
@@ -18,8 +18,6 @@ public static class QuartzServiceCollectionExtensions
         ScheduleOutboxJob(scheduler, internalProcessingPoolingInterval);
 
         services.AddSingleton(scheduler);
-
-        return services;
     }
 
     /// <summary>
@@ -42,7 +40,7 @@ public static class QuartzServiceCollectionExtensions
         var outboxJobKey = new JobKey("ProcessOutboxJob", "MasterData");
         var outboxJob = JobBuilder.Create<ProcessOutboxJob>()
             .WithIdentity(outboxJobKey)
-            .Build(); 
+            .Build();
         var outboxTrigger = CreateTrigger("ProcessOutboxTrigger", intervalMs);
 
         scheduler.ScheduleJob(outboxJob, outboxTrigger).GetAwaiter().GetResult();

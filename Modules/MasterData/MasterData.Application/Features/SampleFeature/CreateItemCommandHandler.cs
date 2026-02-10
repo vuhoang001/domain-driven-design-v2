@@ -13,7 +13,7 @@ public class CreateItemCommandHandler(
     public async Task<string> Handle(CreateItemCommand command, CancellationToken cancellationToken)
     {
         // ✅ 1. Tạo Item
-        var item = Item.Create(Guid.NewGuid(), command.Name, "Sample Description", 10);
+        var item = Item.Create(new ItemId(Guid.NewGuid()), command.Name, "Sample Description", 10);
         await itemRepository.AddAsync(item);
 
         return $"Item '{command.Name}' + Inventory created in same transaction";

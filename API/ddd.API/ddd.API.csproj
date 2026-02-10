@@ -7,13 +7,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Modules\MasterData\MasterData.Application\MasterData.Application.csproj"/>
-        <ProjectReference Include="..\..\Modules\MasterData\MasterData.Infrastructure\MasterData.Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\Modules\MasterData\MasterData.Application\MasterData.Application.csproj" />
+        <ProjectReference Include="..\..\Modules\MasterData\MasterData.Infrastructure\MasterData.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\Modules\Procurement\Procurement.Application\Procurement.Application.csproj" />
+        <ProjectReference Include="..\..\Modules\Procurement\Procurement.Infrastructure\Procurement.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.1" />
-      <PackageReference Include="MailKit" Version="4.12.1" />
+      <PackageReference Include="MailKit" Version="4.11.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.2">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

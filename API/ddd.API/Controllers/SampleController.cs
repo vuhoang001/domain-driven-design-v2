@@ -1,3 +1,4 @@
+using MasterData.Application.Configuration.Commands;
 using MasterData.Application.Features.SampleFeature;
 using MasterData.Infrastructure.Configuration;
 using Microsoft.AspNetCore.Mvc;
@@ -6,13 +7,13 @@ namespace ddd.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SampleController : ControllerBase
+public class SampleController(IMasterDataModule masterDataModule) : ControllerBase
 {
     [HttpPost("create")]
     public async Task<IActionResult> Create([FromBody] CreateSampleRequest request)
     {
         var command = new CreateItemCommand(request.Name);
-        var result  = await CommandsExecutor.Execute(command);
+        var result  = await masterDataModule.ExecuteCommandAsync(command);
         return Ok(new { message = result });
     }
 }

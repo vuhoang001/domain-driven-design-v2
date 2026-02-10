@@ -6,18 +6,18 @@ namespace MasterData.Domain.Item;
 
 public class Item : Entity, IAggregateRoot
 {
-    public Guid Id { get; private set; }
+    public ItemId Id { get; private set; }
     public string ItemName { get; private set; }
     public string? ItemDesc { get; private set; }
     public decimal Price { get; private set; }
 
     private Item()
     {
-        Id       = Guid.NewGuid();
+        Id       = new ItemId(Guid.NewGuid());
         ItemName = "";
     }
 
-    protected Item(Guid id, string itemName, string? itemDesc, decimal price)
+    protected Item(ItemId id, string itemName, string? itemDesc, decimal price)
     {
         CheckRule(new PriceMustBeGreaterThanZeroRule(price));
         Id       = id;
@@ -26,7 +26,7 @@ public class Item : Entity, IAggregateRoot
         Price    = price;
     }
 
-    public static Item Create(Guid id, string itemName, string? itemDesc, decimal price)
+    public static Item Create(ItemId id, string itemName, string? itemDesc, decimal price)
     {
         var item = new Item(id, itemName, itemDesc, price);
 

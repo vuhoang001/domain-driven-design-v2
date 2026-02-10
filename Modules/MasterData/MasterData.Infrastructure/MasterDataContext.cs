@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MasterData.Infrastructure;
 
-public class MasterDataContext(DbContextOptions options, ILoggerFactory loggerFactory) : DbContext(options)
+public class MasterDataContext(DbContextOptions<MasterDataContext> options, ILoggerFactory loggerFactory) : DbContext(options)
 {
     public DbSet<OutboxMessage> OutboxMessages { get; set; }
     public DbSet<Item> Items { get; set; }
@@ -14,8 +14,7 @@ public class MasterDataContext(DbContextOptions options, ILoggerFactory loggerFa
 
     private readonly ILoggerFactory _loggerFactory = loggerFactory;
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);
         base.OnModelCreating(modelBuilder);
     }

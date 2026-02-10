@@ -10,10 +10,10 @@ public class CreateItemNotificationHandler(IItemRepository itemRepository, IEmai
     public async Task Handle(CreateItemNotification notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
-        var item        = await itemRepository.GetByIdAsync(domainEvent.ItemId);
+        var item        = await itemRepository.GetByIdAsync(domainEvent.ItemId.Value);
         item?.Update("Updated by CreateItemNotificationHandler", domainEvent.ItemDesc, domainEvent.Price);
         await emailSender.SendMessage(new EmailMsg("dotrongtan113@gmail.com", "Toi ten la hoanggggf ",
-                                                       "Tôi là nội dung email gửi từ CreateItemNotificationHandler"));
+                                                   "Tôi là nội dung email gửi từ CreateItemNotificationHandler"));
 
         Console.WriteLine("hahaha");
     }

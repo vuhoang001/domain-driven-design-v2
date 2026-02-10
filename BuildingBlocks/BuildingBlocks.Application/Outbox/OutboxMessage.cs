@@ -12,6 +12,8 @@ public class OutboxMessage
 
     public DateTime? ProcessedDate { get; set; }
 
+    public string? Error { get; set; }
+
     public OutboxMessage(Guid id, DateTime occurredOn, string type, string data)
     {
         this.Id            = id;
@@ -23,7 +25,7 @@ public class OutboxMessage
 
     private OutboxMessage(string type, string data)
     {
-        Type      = type;
+        Type = type;
         Data = data;
     }
 }

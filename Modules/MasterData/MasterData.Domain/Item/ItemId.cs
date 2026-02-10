@@ -1,6 +1,5 @@
+using BuildingBlocks.Domain;
+
 namespace MasterData.Domain.Item;
 
-public class ItemId
-{
-    
-}
+public class ItemId(Guid value) : TypeIdValueBase(value);
