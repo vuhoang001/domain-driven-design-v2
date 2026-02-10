@@ -32,22 +32,43 @@ public class ProcessOutboxCommandHandle(
 
         const string sqlUpdateProcessedDate = """
                                               UPDATE [dbo].[OutboxMessages]
-                                              SET [ProcessedDate] = @Date
+                                              SET
+                                                  ProcessedDate = @ProcessedDate,
+                                                  [Error] = @Error
                                               WHERE [Id] = @Id
                                               """;
-
         if (messagesList.Count > 0)
         {
-            foreach (var message in messagesList)
+            foreach (var message in messages)
             {
-                var type   = domainNotificationMapper.GetType(message.Type);
-                var @event = JsonConvert.DeserializeObject(message.Data, type) as IDomainEventNotification;
+                DateTime? processedDate = null;
+                string?   error         = null;
 
-                await mediator.Publish(@event, cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    var type = domainNotificationMapper.GetType(message.Type)
+                        ?? throw new InvalidOperationException($"Unknown type {message.Type}");
+
+                    var @event = JsonConvert.DeserializeObject(message.Data, type)
+                            as IDomainEventNotification
+                        ?? throw new InvalidOperationException("Deserialize failed");
+
+                    await mediator.Publish(@event, cancellationToken);
+
+                    processedDate = DateTime.UtcNow;
+                    error         = null;
+                }
+                catch (Exception ex)
+                {
+                    processedDate = null;
+                    error         = ex.Message;
+                }
+
                 await connection.ExecuteAsync(sqlUpdateProcessedDate, new
                 {
-                    Date = DateTime.UtcNow,
-                    message.Id
+                    Id            = message.Id,
+                    ProcessedDate = processedDate,
+                    Error         = error
                 });
             }
         }

@@ -1,3 +1,4 @@
+using BuildingBlocks.Application.Email;
 using BuildingBlocks.Infrastructure.Email;
 using MasterData.Application.Configuration.Commands;
 using MasterData.Infrastructure.Configuration;
@@ -21,7 +22,7 @@ public static class MasterDataStartup
 
         // MediatR
         services.AddMediator();
-        
+
         // Email 
         services.AddEmail();
 

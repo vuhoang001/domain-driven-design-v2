@@ -4,6 +4,7 @@ using MasterData.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MasterData.Infrastructure.Migrations
 {
     [DbContext(typeof(MasterDataContext))]
-    partial class MasterDataContextModelSnapshot : ModelSnapshot
+    [Migration("20260210021115_update_outbox_message")]
+    partial class update_outbox_message
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,9 +33,6 @@ namespace MasterData.Infrastructure.Migrations
 
                     b.Property<string>("Data")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Error")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("OccurredOn")
